@@ -25,3 +25,15 @@ func TestIsNil(t *testing.T) {
 		})
 	}
 }
+
+func TestIsEmptyNilStack(t *testing.T) {
+
+	var s *Stack
+
+	want := true
+	got := s.IsEmpty()
+
+	if got != want {
+		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
+	}
+}
