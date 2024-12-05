@@ -63,3 +63,19 @@ func TestIsEmptyNonNilStack(t *testing.T) {
 		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
 	}
 }
+
+func TestIsEmptyNonEmptyStack(t *testing.T) {
+
+	l := listlib.LinkedList{}
+	l.AddToBeginning("a")
+
+	s := &Stack{l}
+
+	want := false
+	got := s.IsEmpty()
+
+	if got != want {
+		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
+	}
+
+}
