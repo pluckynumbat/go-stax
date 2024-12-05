@@ -37,3 +37,15 @@ func TestIsEmptyNilStack(t *testing.T) {
 		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
 	}
 }
+
+func TestIsEmptyNonNilStack(t *testing.T) {
+
+	s := &Stack{}
+
+	want := true
+	got := s.IsEmpty()
+
+	if got != want {
+		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
+	}
+}
