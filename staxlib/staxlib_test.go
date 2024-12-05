@@ -30,56 +30,6 @@ func TestIsNil(t *testing.T) {
 	}
 }
 
-func TestIsEmptyNilStack(t *testing.T) {
-
-	var s *Stack
-
-	want := true
-	got := s.IsEmpty()
-
-	if got != want {
-		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
-	}
-}
-
-func TestIsEmptyNonNilStack(t *testing.T) {
-
-	s := &Stack{}
-
-	want := true
-	got := s.IsEmpty()
-
-	if got != want {
-		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
-	}
-
-	l := listlib.LinkedList{}
-	s2 := &Stack{l}
-
-	want = true
-	got = s2.IsEmpty()
-
-	if got != want {
-		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
-	}
-}
-
-func TestIsEmptyNonEmptyStack(t *testing.T) {
-
-	l := listlib.LinkedList{}
-	l.AddToBeginning("a")
-
-	s := &Stack{l}
-
-	want := false
-	got := s.IsEmpty()
-
-	if got != want {
-		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
-	}
-
-}
-
 func TestIsEmpty(t *testing.T) {
 	var s1 *Stack
 
