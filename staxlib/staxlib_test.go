@@ -1,6 +1,10 @@
 package staxlib
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/pluckynumbat/linked-list-stuff-go/listlib"
+)
 
 func TestIsNil(t *testing.T) {
 	var s1, s2 *Stack
@@ -44,6 +48,16 @@ func TestIsEmptyNonNilStack(t *testing.T) {
 
 	want := true
 	got := s.IsEmpty()
+
+	if got != want {
+		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
+	}
+
+	l := listlib.LinkedList{}
+	s2 := &Stack{l}
+
+	want = true
+	got = s2.IsEmpty()
 
 	if got != want {
 		t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
