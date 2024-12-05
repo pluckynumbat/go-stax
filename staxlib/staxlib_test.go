@@ -79,3 +79,38 @@ func TestIsEmptyNonEmptyStack(t *testing.T) {
 	}
 
 }
+
+func TestIsEmpty(t *testing.T) {
+	var s1 *Stack
+
+	s2 := &Stack{}
+
+	emptyList := listlib.LinkedList{}
+	s3 := &Stack{emptyList}
+
+	nonEmptyList := listlib.LinkedList{}
+	nonEmptyList.AddToBeginning("a")
+	s4 := &Stack{nonEmptyList}
+
+	var tests = []struct {
+		name string
+		s    *Stack
+		want bool
+	}{
+		{"nil stack", s1, true},
+		{"non nil stack, nil list", s2, true},
+		{"non nil stack, empty list", s3, true},
+		{"non nil stack, non empty list", s4, false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			want := test.want
+			got := test.s.IsEmpty()
+
+			if want != got {
+				t.Errorf("IsEmpty returned incorrected results, want: %v, got: %v", want, got)
+			}
+		})
+	}
+}
