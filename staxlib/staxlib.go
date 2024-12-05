@@ -13,3 +13,7 @@ func (s *Stack) IsNil() bool {
 	return s == nil
 }
 
+// Method to check whether a Stack is empty
+func (s *Stack) IsEmpty() bool {
+	return s.IsNil() || s.list.Head() == nil
+}
