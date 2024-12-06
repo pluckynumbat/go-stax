@@ -1,8 +1,13 @@
 package staxlib
 
 import (
+	"fmt"
+
 	"github.com/pluckynumbat/linked-list-stuff-go/listlib"
 )
+
+var stackNilError = fmt.Errorf("The stack is nil")
+var stackEmptyError = fmt.Errorf("The stack is empty")
 
 type Stack struct {
 	list *listlib.LinkedList
