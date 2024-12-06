@@ -35,10 +35,10 @@ func TestIsEmpty(t *testing.T) {
 
 	s2 := &Stack{}
 
-	emptyList := listlib.LinkedList{}
+	emptyList := &listlib.LinkedList{}
 	s3 := &Stack{emptyList}
 
-	nonEmptyList := listlib.LinkedList{}
+	nonEmptyList := &listlib.LinkedList{}
 	nonEmptyList.AddToBeginning("a")
 	s4 := &Stack{nonEmptyList}
 
