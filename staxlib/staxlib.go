@@ -5,7 +5,7 @@ import (
 )
 
 type Stack struct {
-	list listlib.LinkedList
+	list *listlib.LinkedList
 }
 
 // Method to check whether a pointer to a Stack is nil
