@@ -86,3 +86,14 @@ func TestPeekEmptyStack(t *testing.T) {
 	}
 }
 
+func TestPeekStackEmptyList(t *testing.T) {
+	emptyList := &listlib.LinkedList{}
+	s := &Stack{emptyList}
+	_, err := s.Peek()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Peek() on an empty stack should return an error!")
+	}
+}
+
