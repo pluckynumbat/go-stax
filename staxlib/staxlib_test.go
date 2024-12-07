@@ -97,3 +97,19 @@ func TestPeekStackEmptyList(t *testing.T) {
 	}
 }
 
+func TestPeekStackNonEmptyList(t *testing.T) {
+	nonEmptyList := &listlib.LinkedList{}
+	nonEmptyList.AddToBeginning("a")
+	s := &Stack{nonEmptyList}
+	data, err := s.Peek()
+	if err != nil {
+		t.Errorf("Peek() on the Stack failed, error: %v", err)
+	} else {
+		want := "a"
+		got := data
+		if got != want {
+			t.Errorf("Incorrect results for Peek() on the Stack, want: %v, got: %v", want, got)
+		}
+	}
+}
+
