@@ -1,6 +1,7 @@
 package staxlib
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/pluckynumbat/linked-list-stuff-go/listlib"
@@ -64,3 +65,14 @@ func TestIsEmpty(t *testing.T) {
 		})
 	}
 }
+
+func TestPeekNilStack(t *testing.T) {
+	var s *Stack
+	_, err := s.Peek()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Peek() on a nil stack should return an error!")
+	}
+}
+
