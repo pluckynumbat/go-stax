@@ -113,3 +113,40 @@ func TestPeekStackNonEmptyList(t *testing.T) {
 	}
 }
 
+func TestPeekStackTillEmpty(t *testing.T) {
+	l := listlib.ConstructFromValues("a", "b", "c")
+	lp := &l
+	s := &Stack{lp}
+
+	var tests = []struct {
+		name string
+		want string
+	}{
+		{"3 elements", "a"},
+		{"2 elements", "b"},
+		{"1 element", "c"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			data, err := s.Peek()
+			if err != nil {
+				t.Errorf("Peek() on the Stack failed, error: %v", err)
+			} else {
+				want := test.want
+				got := data
+				if got != want {
+					t.Errorf("Incorrect results for Peek() on the Stack, want: %v, got: %v", want, got)
+				}
+			}
+			l.RemoveAtBeginning()
+		})
+	}
+
+	_, err := s.Peek()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Peek() on an empty stack should return an error!")
+	}
+}
