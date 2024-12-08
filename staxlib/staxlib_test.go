@@ -31,6 +31,34 @@ func TestIsNil(t *testing.T) {
 	}
 }
 
+func TestIsListNil(t *testing.T) {
+	var s1, s2, s3 *Stack
+	s2 = &Stack{}
+
+	l := &listlib.LinkedList{}
+	s3 = &Stack{l}
+	var tests = []struct {
+		name string
+		s    *Stack
+		want bool
+	}{
+		{"nil stack", s1, true},
+		{"nil list", s2, true},
+		{"nil false", s3, false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			want := test.want
+			got := test.s.isListNil()
+
+			if want != got {
+				t.Errorf("IsNil returned incorrected results, want: %v, got: %v", want, got)
+			}
+		})
+	}
+}
+
 func TestIsEmpty(t *testing.T) {
 	var s1 *Stack
 
@@ -149,4 +177,47 @@ func TestPeekStackTillEmpty(t *testing.T) {
 	} else {
 		t.Errorf("Calling Peek() on an empty stack should return an error!")
 	}
+}
+
+func TestPush(t *testing.T) {
+	var s0 *Stack
+	err := s0.Push("a")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Push() on a nil stack should return an error!")
+	}
+
+	s := &Stack{}
+	var tests = []struct {
+		name    string
+		pushVal string
+		want    string
+	}{
+		{"1 element", "a", "a"},
+		{"2 elements", "b", "b"},
+		{"3 elements", "c", "c"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err = s.Push(test.pushVal)
+			if err != nil {
+				t.Errorf("Push() on the Stack failed, error: %v", err)
+			} else {
+				data, err2 := s.Peek()
+				if err2 != nil {
+					t.Errorf("Peek() on the Stack failed, error: %v", err)
+				} else {
+					want := test.want
+					got := data
+					if got != want {
+						t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
+					}
+				}
+			}
+
+		})
+	}
+
 }

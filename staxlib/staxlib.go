@@ -18,9 +18,14 @@ func (s *Stack) IsNil() bool {
 	return s == nil
 }
 
+// Internal Method to check whether the underlying list is nil
+func (s *Stack) isListNil() bool {
+	return s.IsNil() || s.list.IsNil()
+}
+
 // Method to check whether a Stack is empty
 func (s *Stack) IsEmpty() bool {
-	return s.IsNil() || s.list.Head() == nil
+	return s.IsNil() || s.isListNil() || s.list.Head() == nil
 }
 
 // Method to check the the data at the top of the Stack
@@ -40,3 +45,20 @@ func (s *Stack) Peek() (string, error) {
 
 	return data, nil
 }
+
+// Method to add a new entry to the Stack
+func (s *Stack) Push(value string) error {
+	if s.IsNil() {
+		return stackNilError
+	}
+
+	if s.isListNil() {
+		newList := listlib.ConstructFromValues(value)
+		s.list = &newList
+		return nil
+	}
+
+	s.list.AddToBeginning(value)
+	return nil
+}
+
