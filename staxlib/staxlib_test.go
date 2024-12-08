@@ -196,4 +196,36 @@ func TestPush(t *testing.T) {
 			}
 		}
 	}
+
+	err = s.Push("b")
+	if err != nil {
+		t.Errorf("Push() on the Stack failed, error: %v", err)
+	} else {
+		data, err2 := s.Peek()
+		if err2 != nil {
+			t.Errorf("Peek() on the Stack failed, error: %v", err)
+		} else {
+			want := "b"
+			got := data
+			if got != want {
+				t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
+			}
+		}
+	}
+
+	err = s.Push("c")
+	if err != nil {
+		t.Errorf("Push() on the Stack failed, error: %v", err)
+	} else {
+		data, err2 := s.Peek()
+		if err2 != nil {
+			t.Errorf("Peek() on the Stack failed, error: %v", err)
+		} else {
+			want := "c"
+			got := data
+			if got != want {
+				t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
+			}
+		}
+	}
 }
