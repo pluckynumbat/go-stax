@@ -180,8 +180,16 @@ func TestPeekStackTillEmpty(t *testing.T) {
 }
 
 func TestPush(t *testing.T) {
+	var s0 *Stack
+	err := s0.Push("a")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Push() on a nil stack should return an error!")
+	}
+
 	s := &Stack{}
-	err := s.Push("a")
+	err = s.Push("a")
 	if err != nil {
 		t.Errorf("Push() on the Stack failed, error: %v", err)
 	} else {
