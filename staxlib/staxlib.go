@@ -25,7 +25,7 @@ func (s *Stack) isListNil() bool {
 
 // Method to check whether a Stack is empty
 func (s *Stack) IsEmpty() bool {
-	return s.IsNil() || s.list.Head() == nil
+	return s.IsNil() || s.isListNil() || s.list.Head() == nil
 }
 
 // Method to check the the data at the top of the Stack
