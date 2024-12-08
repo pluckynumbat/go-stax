@@ -45,3 +45,20 @@ func (s *Stack) Peek() (string, error) {
 
 	return data, nil
 }
+
+// Method to add a new entry to the Stack
+func (s *Stack) Push(value string) error {
+	if s.IsNil() {
+		return stackNilError
+	}
+
+	if s.isListNil() {
+		newList := listlib.ConstructFromValues(value)
+		s.list = &newList
+		return nil
+	}
+
+	s.list.AddToBeginning(value)
+	return nil
+}
+
