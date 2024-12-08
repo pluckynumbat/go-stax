@@ -189,51 +189,35 @@ func TestPush(t *testing.T) {
 	}
 
 	s := &Stack{}
-	err = s.Push("a")
-	if err != nil {
-		t.Errorf("Push() on the Stack failed, error: %v", err)
-	} else {
-		data, err2 := s.Peek()
-		if err2 != nil {
-			t.Errorf("Peek() on the Stack failed, error: %v", err)
-		} else {
-			want := "a"
-			got := data
-			if got != want {
-				t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
-			}
-		}
+	var tests = []struct {
+		name    string
+		pushVal string
+		want    string
+	}{
+		{"1 element", "a", "a"},
+		{"2 elements", "b", "b"},
+		{"3 elements", "c", "c"},
 	}
 
-	err = s.Push("b")
-	if err != nil {
-		t.Errorf("Push() on the Stack failed, error: %v", err)
-	} else {
-		data, err2 := s.Peek()
-		if err2 != nil {
-			t.Errorf("Peek() on the Stack failed, error: %v", err)
-		} else {
-			want := "b"
-			got := data
-			if got != want {
-				t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err = s.Push(test.pushVal)
+			if err != nil {
+				t.Errorf("Push() on the Stack failed, error: %v", err)
+			} else {
+				data, err2 := s.Peek()
+				if err2 != nil {
+					t.Errorf("Peek() on the Stack failed, error: %v", err)
+				} else {
+					want := test.want
+					got := data
+					if got != want {
+						t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
+					}
+				}
 			}
-		}
+
+		})
 	}
 
-	err = s.Push("c")
-	if err != nil {
-		t.Errorf("Push() on the Stack failed, error: %v", err)
-	} else {
-		data, err2 := s.Peek()
-		if err2 != nil {
-			t.Errorf("Peek() on the Stack failed, error: %v", err)
-		} else {
-			want := "c"
-			got := data
-			if got != want {
-				t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
-			}
-		}
-	}
 }
