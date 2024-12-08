@@ -31,6 +31,34 @@ func TestIsNil(t *testing.T) {
 	}
 }
 
+func TestIsListNil(t *testing.T) {
+	var s1, s2, s3 *Stack
+	s2 = &Stack{}
+
+	l := &listlib.LinkedList{}
+	s3 = &Stack{l}
+	var tests = []struct {
+		name string
+		s    *Stack
+		want bool
+	}{
+		{"nil stack", s1, true},
+		{"nil list", s2, true},
+		{"nil false", s3, false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			want := test.want
+			got := test.s.isListNil()
+
+			if want != got {
+				t.Errorf("IsNil returned incorrected results, want: %v, got: %v", want, got)
+			}
+		})
+	}
+}
+
 func TestIsEmpty(t *testing.T) {
 	var s1 *Stack
 
