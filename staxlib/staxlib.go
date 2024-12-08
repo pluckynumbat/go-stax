@@ -18,6 +18,11 @@ func (s *Stack) IsNil() bool {
 	return s == nil
 }
 
+// Internal Method to check whether the underlying list is nil
+func (s *Stack) isListNil() bool {
+	return s.IsNil() || s.list.IsNil()
+}
+
 // Method to check whether a Stack is empty
 func (s *Stack) IsEmpty() bool {
 	return s.IsNil() || s.list.Head() == nil
