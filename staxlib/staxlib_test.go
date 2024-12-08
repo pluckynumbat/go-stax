@@ -178,3 +178,22 @@ func TestPeekStackTillEmpty(t *testing.T) {
 		t.Errorf("Calling Peek() on an empty stack should return an error!")
 	}
 }
+
+func TestPush(t *testing.T) {
+	s := &Stack{}
+	err := s.Push("a")
+	if err != nil {
+		t.Errorf("Push() on the Stack failed, error: %v", err)
+	} else {
+		data, err2 := s.Peek()
+		if err2 != nil {
+			t.Errorf("Peek() on the Stack failed, error: %v", err)
+		} else {
+			want := "a"
+			got := data
+			if got != want {
+				t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
+			}
+		}
+	}
+}
