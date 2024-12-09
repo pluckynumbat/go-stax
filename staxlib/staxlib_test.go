@@ -217,6 +217,16 @@ func TestPush(t *testing.T) {
 				}
 			}
 
+func TestPopNilStack(t *testing.T) {
+	var s *Stack
+	_, err := s.Pop()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Pop() on a nil stack should return an error!")
+	}
+}
+
 		})
 	}
 
