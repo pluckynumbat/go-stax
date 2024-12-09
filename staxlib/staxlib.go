@@ -46,7 +46,7 @@ func (s *Stack) Peek() (string, error) {
 	return data, nil
 }
 
-// Method to add a new entry to the Stack
+// Method to add a new entry to the top of the Stack
 func (s *Stack) Push(value string) error {
 	if s.IsNil() {
 		return stackNilError
@@ -62,7 +62,7 @@ func (s *Stack) Push(value string) error {
 	return nil
 }
 
-// Method to remove an entry from the Stack
+// Method to remove an entry from the top of the Stack
 func (s *Stack) Pop() (string, error) {
 	if s.IsNil() {
 		return "", stackNilError
