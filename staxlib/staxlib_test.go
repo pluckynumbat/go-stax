@@ -227,6 +227,16 @@ func TestPopNilStack(t *testing.T) {
 	}
 }
 
+func TestPopEmptyStack(t *testing.T) {
+	s := &Stack{}
+	_, err := s.Pop()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Pop() on an empty stack should return an error!")
+	}
+}
+
 		})
 	}
 
