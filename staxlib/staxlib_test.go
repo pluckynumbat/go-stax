@@ -216,6 +216,9 @@ func TestPush(t *testing.T) {
 					}
 				}
 			}
+		})
+	}
+}
 
 func TestPopNilStack(t *testing.T) {
 	var s *Stack
@@ -235,9 +238,4 @@ func TestPopEmptyStack(t *testing.T) {
 	} else {
 		t.Errorf("Calling Pop() on an empty stack should return an error!")
 	}
-}
-
-		})
-	}
-
 }
