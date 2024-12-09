@@ -46,7 +46,7 @@ func (s *Stack) Peek() (string, error) {
 	return data, nil
 }
 
-// Method to add a new entry to the Stack
+// Method to add a new entry to the top of the Stack
 func (s *Stack) Push(value string) error {
 	if s.IsNil() {
 		return stackNilError
@@ -62,3 +62,24 @@ func (s *Stack) Push(value string) error {
 	return nil
 }
 
+// Method to remove an entry from the top of the Stack
+func (s *Stack) Pop() (string, error) {
+	if s.IsNil() {
+		return "", stackNilError
+	}
+
+	if s.IsEmpty() {
+		return "", stackEmptyError
+	}
+
+	node := s.list.RemoveAtBeginning()
+	if node == nil {
+		return "", fmt.Errorf("Nil pointer encountered while popping from the Stack")
+	}
+
+	val, err := node.GetData()
+	if err != nil {
+		return "", fmt.Errorf("Error encountered while popping from the Stack:  %v", err)
+	}
+	return val, nil
+}

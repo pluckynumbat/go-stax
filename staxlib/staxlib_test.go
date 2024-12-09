@@ -207,7 +207,7 @@ func TestPush(t *testing.T) {
 			} else {
 				data, err2 := s.Peek()
 				if err2 != nil {
-					t.Errorf("Peek() on the Stack failed, error: %v", err)
+					t.Errorf("Peek() on the Stack failed, error: %v", err2)
 				} else {
 					want := test.want
 					got := data
@@ -216,8 +216,26 @@ func TestPush(t *testing.T) {
 					}
 				}
 			}
-
 		})
 	}
+}
 
+func TestPopNilStack(t *testing.T) {
+	var s *Stack
+	_, err := s.Pop()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Pop() on a nil stack should return an error!")
+	}
+}
+
+func TestPopEmptyStack(t *testing.T) {
+	s := &Stack{}
+	_, err := s.Pop()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Pop() on an empty stack should return an error!")
+	}
 }
