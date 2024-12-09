@@ -207,7 +207,7 @@ func TestPush(t *testing.T) {
 			} else {
 				data, err2 := s.Peek()
 				if err2 != nil {
-					t.Errorf("Peek() on the Stack failed, error: %v", err)
+					t.Errorf("Peek() on the Stack failed, error: %v", err2)
 				} else {
 					want := test.want
 					got := data
