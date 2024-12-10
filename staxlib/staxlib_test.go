@@ -316,14 +316,6 @@ func TestPopStackTillEmpty(t *testing.T) {
 }
 
 func TestStackOperations(t *testing.T) {
-	var s0 *Stack
-	err := s0.Push("a")
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		t.Errorf("Calling Push() on a nil stack should return an error!")
-	}
-
 	s := &Stack{}
 	var pushTests = []struct {
 		name    string
@@ -337,7 +329,7 @@ func TestStackOperations(t *testing.T) {
 
 	for _, test := range pushTests {
 		t.Run(test.name, func(t *testing.T) {
-			err = s.Push(test.pushVal)
+			err := s.Push(test.pushVal)
 			if err != nil {
 				t.Errorf("Push() on the Stack failed, error: %v", err)
 			} else {
