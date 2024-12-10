@@ -254,5 +254,12 @@ func TestPopSingleElementStack(t *testing.T) {
 	if got != want {
 		t.Errorf("Incorrect results for Pop() on the Stack, want: %v, got: %v", want, got)
 	}
+
+	want2 := true
+	got2 := s.IsEmpty()
+
+	if got2 != want2 {
+		t.Errorf("Incorrect results for IsEmpty() on the Stack, want: %v, got: %v", want2, got2)
+	}
 }
 
