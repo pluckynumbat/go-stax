@@ -263,3 +263,54 @@ func TestPopSingleElementStack(t *testing.T) {
 	}
 }
 
+func TestPopStackTillEmpty(t *testing.T) {
+	l := listlib.ConstructFromValues("a", "b", "c")
+	s := &Stack{&l}
+
+	var tests = []struct {
+		name       string
+		popVal     string
+		newTop     string
+		expPeekErr error
+	}{
+		{"3 elements", "a", "b", nil},
+		{"2 elements", "b", "c", nil},
+		{"1 element", "c", "", stackEmptyError},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			val, err := s.Pop()
+			if err != nil {
+				t.Errorf("Pop() on the Stack failed, error: %v", err)
+			} else {
+				want := test.popVal
+				got := val
+
+				if got != want {
+					t.Errorf("Incorrect results for Pop() on the Stack, want: %v, got: %v", want, got)
+				}
+
+				val2, err2 := s.Peek()
+
+				if test.expPeekErr == nil {
+					if err2 != nil {
+						t.Errorf("Peek() on the Stack failed unexpectedly, error: %v", err2)
+					}
+				} else {
+					if err2 != test.expPeekErr {
+						t.Errorf("Peek() error: %v doesn't match expected error: %v", err2, test.expPeekErr)
+					} else {
+						fmt.Println(err2)
+					}
+				}
+
+				got = val2
+				want = test.newTop
+				if got != want {
+					t.Errorf("Incorrect results for Peek() on the Stack, want: %v, got: %v", want, got)
+				}
+			}
+		})
+	}
+}
