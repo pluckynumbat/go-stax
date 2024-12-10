@@ -314,3 +314,91 @@ func TestPopStackTillEmpty(t *testing.T) {
 		})
 	}
 }
+
+func TestStackOperations(t *testing.T) {
+	var s0 *Stack
+	err := s0.Push("a")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Errorf("Calling Push() on a nil stack should return an error!")
+	}
+
+	s := &Stack{}
+	var pushTests = []struct {
+		name    string
+		pushVal string
+		want    string
+	}{
+		{"1 element", "a", "a"},
+		{"2 elements", "b", "b"},
+		{"3 elements", "c", "c"},
+	}
+
+	for _, test := range pushTests {
+		t.Run(test.name, func(t *testing.T) {
+			err = s.Push(test.pushVal)
+			if err != nil {
+				t.Errorf("Push() on the Stack failed, error: %v", err)
+			} else {
+				data, err2 := s.Peek()
+				if err2 != nil {
+					t.Errorf("Peek() on the Stack failed, error: %v", err2)
+				} else {
+					want := test.want
+					got := data
+					if got != want {
+						t.Errorf("Incorrect results for Push() on the Stack, want: %v, got: %v", want, got)
+					}
+				}
+			}
+		})
+	}
+
+	var popTests = []struct {
+		name       string
+		popVal     string
+		newTop     string
+		expPeekErr error
+	}{
+		{"3 elements", "c", "b", nil},
+		{"2 elements", "b", "a", nil},
+		{"1 element", "a", "", stackEmptyError},
+	}
+
+	for _, test := range popTests {
+		t.Run(test.name, func(t *testing.T) {
+			val, err := s.Pop()
+			if err != nil {
+				t.Errorf("Pop() on the Stack failed, error: %v", err)
+			} else {
+				want := test.popVal
+				got := val
+
+				if got != want {
+					t.Errorf("Incorrect results for Pop() on the Stack, want: %v, got: %v", want, got)
+				}
+
+				val2, err2 := s.Peek()
+
+				if test.expPeekErr == nil {
+					if err2 != nil {
+						t.Errorf("Peek() on the Stack failed unexpectedly, error: %v", err2)
+					}
+				} else {
+					if err2 != test.expPeekErr {
+						t.Errorf("Peek() error: %v doesn't match expected error: %v", err2, test.expPeekErr)
+					} else {
+						fmt.Println(err2)
+					}
+				}
+
+				got = val2
+				want = test.newTop
+				if got != want {
+					t.Errorf("Incorrect results for Peek() on the Stack, want: %v, got: %v", want, got)
+				}
+			}
+		})
+	}
+}
