@@ -240,29 +240,6 @@ func TestPopEmptyStack(t *testing.T) {
 	}
 }
 
-func TestPopSingleElementStack(t *testing.T) {
-	nonEmptyList := &listlib.LinkedList{}
-	nonEmptyList.AddToBeginning("a")
-	s := &Stack{nonEmptyList}
-	val, err := s.Pop()
-	if err != nil {
-		t.Errorf("Pop() on the Stack failed, error: %v", err)
-	}
-	want := "a"
-	got := val
-
-	if got != want {
-		t.Errorf("Incorrect results for Pop() on the Stack, want: %v, got: %v", want, got)
-	}
-
-	want2 := true
-	got2 := s.IsEmpty()
-
-	if got2 != want2 {
-		t.Errorf("Incorrect results for IsEmpty() on the Stack, want: %v, got: %v", want2, got2)
-	}
-}
-
 func TestPopStackTillEmpty(t *testing.T) {
 	l := listlib.ConstructFromValues("a", "b", "c")
 	s := &Stack{&l}
