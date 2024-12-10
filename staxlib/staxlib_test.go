@@ -322,9 +322,9 @@ func TestStackOperations(t *testing.T) {
 		pushVal string
 		want    string
 	}{
-		{"1 element", "a", "a"},
-		{"2 elements", "b", "b"},
-		{"3 elements", "c", "c"},
+		{"push a", "a", "a"},
+		{"push b", "b", "b"},
+		{"push c", "c", "c"},
 	}
 
 	for _, test := range pushTests {
@@ -353,9 +353,9 @@ func TestStackOperations(t *testing.T) {
 		newTop     string
 		expPeekErr error
 	}{
-		{"3 elements", "c", "b", nil},
-		{"2 elements", "b", "a", nil},
-		{"1 element", "a", "", stackEmptyError},
+		{"pop c", "c", "b", nil},
+		{"pop b", "b", "a", nil},
+		{"pop a", "a", "", stackEmptyError},
 	}
 
 	for _, test := range popTests {
@@ -393,4 +393,26 @@ func TestStackOperations(t *testing.T) {
 			}
 		})
 	}
+
+	var stateTests = []struct {
+		name   string
+		fnName string
+		fn     func() bool
+		want   bool
+	}{
+		{"is nil", "IsNil()", s.IsNil, false},
+		{"is list nil", "isListNil()", s.isListNil, false},
+		{"is empty", "IsEmpty()", s.IsEmpty, true},
+	}
+
+	for _, test := range stateTests {
+		t.Run(test.name, func(t *testing.T) {
+			got := test.fn()
+			want := test.want
+			if got != want {
+				t.Errorf("Incorrect results for state check function %v on the Stack, want: %v, got: %v", test.fnName, want, got)
+			}
+		})
+	}
+
 }
