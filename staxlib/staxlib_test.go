@@ -94,6 +94,41 @@ func TestIsEmpty(t *testing.T) {
 	}
 }
 
+func TestCreateNewStack(t *testing.T) {
+	var s *Stack
+	want := true
+	got := s.IsNil()
+	if got != want {
+		t.Errorf("IsNil() gave incorrect results, want: %v, got %v", want, got)
+	}
+
+	s = &Stack{}
+	want = false
+	got = s.IsNil()
+	if got != want {
+		t.Errorf("IsNil() gave incorrect results, want: %v, got %v", want, got)
+	}
+
+	want = true
+	got = s.isListNil()
+	if got != want {
+		t.Errorf("isListNil() gave incorrect results, want: %v, got %v", want, got)
+	}
+
+	s = CreateNewStack()
+	want = false
+	got = s.isListNil()
+	if got != want {
+		t.Errorf("isListNil() gave incorrect results, want: %v, got %v", want, got)
+	}
+
+	want = true
+	got = s.IsEmpty()
+	if got != want {
+		t.Errorf("IsEmpty() gave incorrect results, want: %v, got %v", want, got)
+	}
+}
+
 func TestPeekNilStack(t *testing.T) {
 	var s *Stack
 	_, err := s.Peek()
