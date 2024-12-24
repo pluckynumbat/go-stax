@@ -13,6 +13,13 @@ type Stack struct {
 	list *listlib.LinkedList
 }
 
+// Function to create a new stack with a new underlying list
+func CreateNewStack() *Stack {
+	l := &listlib.LinkedList{}
+	s := &Stack{l}
+	return s
+}
+
 // Method to check whether a pointer to a Stack is nil
 func (s *Stack) IsNil() bool {
 	return s == nil
