@@ -28,6 +28,13 @@ func (s *Stack) IsEmpty() bool {
 	return s.IsNil() || s.isListNil() || s.list.Head() == nil
 }
 
+// Method to create a new stack with a new underlying list
+func CreateNewStack() *Stack {
+	l := &listlib.LinkedList{}
+	s := &Stack{l}
+	return s
+}
+
 // Method to check the the data at the top of the Stack
 func (s *Stack) Peek() (string, error) {
 	if s.IsNil() {
