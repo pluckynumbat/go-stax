@@ -95,37 +95,42 @@ func TestIsEmpty(t *testing.T) {
 }
 
 func TestCreateNewStack(t *testing.T) {
-	var s *Stack
-	want := true
-	got := s.IsNil()
-	if got != want {
-		t.Errorf("IsNil() gave incorrect results, want: %v, got %v", want, got)
+	var s1, s2, s3 *Stack
+	s2 = &Stack{}
+	s3 = CreateNewStack()
+
+	var tests = []struct {
+		name          string
+		s             *Stack
+		wantIsNil     bool
+		wantIsListNil bool
+		wantIsEmpty   bool
+	}{
+		{"nil pointer", s1, true, true, true},
+		{"nil list", s2, false, true, true},
+		{"create new stack", s3, false, false, true},
 	}
 
-	s = &Stack{}
-	want = false
-	got = s.IsNil()
-	if got != want {
-		t.Errorf("IsNil() gave incorrect results, want: %v, got %v", want, got)
-	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			want := test.wantIsNil
+			got := test.s.IsNil()
+			if got != want {
+				t.Errorf("IsNil() gave incorrect results, want: %v, got %v", want, got)
+			}
 
-	want = true
-	got = s.isListNil()
-	if got != want {
-		t.Errorf("isListNil() gave incorrect results, want: %v, got %v", want, got)
-	}
+			want = test.wantIsListNil
+			got = test.s.isListNil()
+			if got != want {
+				t.Errorf("isListNil() gave incorrect results, want: %v, got %v", want, got)
+			}
 
-	s = CreateNewStack()
-	want = false
-	got = s.isListNil()
-	if got != want {
-		t.Errorf("isListNil() gave incorrect results, want: %v, got %v", want, got)
-	}
-
-	want = true
-	got = s.IsEmpty()
-	if got != want {
-		t.Errorf("IsEmpty() gave incorrect results, want: %v, got %v", want, got)
+			want = test.wantIsEmpty
+			got = test.s.IsEmpty()
+			if got != want {
+				t.Errorf("IsEmpty() gave incorrect results, want: %v, got %v", want, got)
+			}
+		})
 	}
 }
 
