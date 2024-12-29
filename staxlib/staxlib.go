@@ -40,7 +40,7 @@ func (s *Stack) Peek() (string, error) {
 
 	data, err := s.list.Head().GetData()
 	if err != nil {
-		return "", fmt.Errorf("Error rerieving data from top:  %v", err)
+		return "", fmt.Errorf("Error retrieving data from top:  %v", err)
 	}
 
 	return data, nil
