@@ -10,6 +10,9 @@ import (
 type prInt int
 
 func (p *prInt) String() string {
+	if p == nil {
+		return "nil"
+	}
 	return fmt.Sprintf("%v", *p)
 }
 
