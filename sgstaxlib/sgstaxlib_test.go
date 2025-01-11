@@ -105,3 +105,49 @@ func TestIsEmpty(t *testing.T) {
 		})
 	}
 }
+
+func TestPeek(t *testing.T) {
+	var s1 *SemiGenericStack[*prInt]
+	s2 := &SemiGenericStack[*prInt]{}
+
+	l := &sdlistlib.SemiGenericList[*prInt]{}
+	s3 := &SemiGenericStack[*prInt]{l}
+
+	var pr prInt = 1
+	var ptr = &pr
+	l2 := &sdlistlib.SemiGenericList[*prInt]{}
+	l2.AddAtBeginning(ptr)
+	s4 := &SemiGenericStack[*prInt]{l2}
+
+	var tests = []struct {
+		name         string
+		stack        *SemiGenericStack[*prInt]
+		expValString string
+		expErr       error
+	}{
+		{"nil stack", s1, "nil", stackNilError},
+		{"non-nil stack, nil list", s2, "nil", stackEmptyError},
+		{"empty stack", s3, "nil", stackEmptyError},
+		{"non-empty stack", s4, "1", nil},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+
+			gotVal, gotErr := test.stack.Peek()
+			wantErr := test.expErr
+
+			gotString := gotVal.String()
+			wantString := test.expValString
+
+			if gotErr != wantErr {
+				t.Errorf("Unexpected error for Peek(), want: %v, got : %v", wantErr, gotErr)
+			}
+
+			if gotString != wantString {
+				t.Errorf("Incorrect result for Peek(), want: %v, got : %v", wantString, gotString)
+			}
+		})
+	}
+}
+
