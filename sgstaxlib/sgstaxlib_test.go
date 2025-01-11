@@ -151,3 +151,55 @@ func TestPeek(t *testing.T) {
 	}
 }
 
+func TestPeekStackTillEmpty(t *testing.T) {
+	l := &sdlistlib.SemiGenericList[*prInt]{}
+
+	var pr1, pr2, pr3 prInt = 1, 2, 3
+	ptrs := []*prInt{&pr1, &pr2, &pr3}
+
+	for _, v := range ptrs {
+		err := l.AddAtBeginning(v)
+		if err != nil {
+			t.Fatalf("list's AddAtBeginning() failed with error: %v", err)
+		}
+	}
+
+	s := &SemiGenericStack[*prInt]{l}
+
+	var tests = []struct {
+		name          string
+		wantValString string
+	}{
+		{"3 element stack", "3"},
+		{"2 element stack", "2"},
+		{"1 element stack", "1"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+
+			val, err := s.Peek()
+			if err != nil {
+				t.Fatalf("Peek() failed with error: %v", err)
+			}
+
+			got := val.String()
+			want := test.wantValString
+
+			if got != want {
+				t.Errorf("Incorrect result for Peek(), want: %v, got : %v", want, got)
+			}
+
+			_, err2 := l.RemoveFirst()
+			if err != nil {
+				t.Fatalf("list's RemoveFirst() failed with error: %v", err2)
+			}
+		})
+	}
+
+	// check is empty
+	isEmpty := s.IsEmpty()
+	if !isEmpty {
+		t.Errorf("stack should be empty after removing all elements from the underlying list")
+	}
+}
