@@ -29,3 +29,21 @@ func (stack *SemiGenericStack[T]) IsEmpty() bool {
 	return stack.IsNil() || stack.isListNil() || stack.sdlist.Head() == nil
 }
 
+// Method to check the the data at the top of the SemiGenericStack
+func (stack *SemiGenericStack[T]) Peek() (T, error) {
+
+	if stack.IsNil() {
+		return *new(T), stackNilError
+	}
+
+	if stack.IsEmpty() {
+		return *new(T), stackEmptyError
+	}
+
+	data, err := stack.sdlist.Head().GetData()
+	if err != nil {
+		return *new(T), fmt.Errorf("Error retrieving data from top:  %v", err)
+	}
+
+	return data, nil
+}
