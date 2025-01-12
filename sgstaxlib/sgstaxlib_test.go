@@ -257,7 +257,7 @@ func TestPush(t *testing.T) {
 		})
 	}
 
-	// Part 2: Stack of prStrings
+	// Part 2: Stack of prString pointers
 	var s2 *SemiGenericStack[*prString]
 
 	var prS0 prString
