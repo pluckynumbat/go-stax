@@ -205,3 +205,52 @@ func TestPeek(t *testing.T) {
 		t.Errorf("stack should be empty after removing all elements from the underlying list")
 	}
 }
+
+func TestPushprInt(t *testing.T) {
+	var s *SemiGenericStack[*prInt]
+
+	var pr1, pr2, pr3 prInt = 1, 2, 3
+	ptr1, ptr2, ptr3 := &pr1, &pr2, &pr3
+
+	err := s.Push(ptr1)
+	if err == nil {
+		t.Error("Calling Push() on a nil stack should return an error!")
+	} else {
+		fmt.Println(err)
+	}
+
+	s = &SemiGenericStack[*prInt]{}
+
+	var tests = []struct {
+		name   string
+		val    *prInt
+		expVal string
+	}{
+		{"push to empty stack", new(prInt), "0"},
+		{"push to 1 element stack", ptr1, "1"},
+		{"push to 2 element stack", ptr2, "2"},
+		{"push to 3 element stack", ptr3, "3"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err := s.Push(test.val)
+			if err != nil {
+				t.Errorf("Push() failed with error: %v", err)
+			} else {
+				peekVal, err2 := s.Peek()
+				if err2 != nil {
+					t.Errorf("Peek() failed with error: %v", err2)
+				}
+
+				got := peekVal.String()
+				want := test.expVal
+
+				if got != want {
+					t.Errorf("Push() returned incorrect results, want: %v, got: %v", want, got)
+				}
+			}
+		})
+	}
+}
+
