@@ -7,13 +7,18 @@ import (
 	"github.com/pluckynumbat/linked-list-stuff-go/sdlistlib"
 )
 
-type prInt int
+type prInt int       // printable int
+type prString string // printable string
 
 func (p *prInt) String() string {
 	if p == nil {
 		return "nil"
 	}
 	return fmt.Sprintf("%v", *p)
+}
+
+func (p prString) String() string {
+	return fmt.Sprintf("%v", string(p))
 }
 
 func TestIsNil(t *testing.T) {
@@ -203,5 +208,102 @@ func TestPeek(t *testing.T) {
 	isEmpty := s.IsEmpty()
 	if !isEmpty {
 		t.Errorf("stack should be empty after removing all elements from the underlying list")
+	}
+}
+
+func TestPush(t *testing.T) {
+
+	// Part 1: Stack of prInt pointers
+	var s1 *SemiGenericStack[*prInt]
+
+	var pr1, pr2, pr3 prInt = 1, 2, 3
+	ptr1, ptr2, ptr3 := &pr1, &pr2, &pr3
+
+	err := s1.Push(ptr1)
+	if err == nil {
+		t.Error("Calling Push() on a nil stack should return an error!")
+	} else {
+		fmt.Println(err)
+	}
+
+	s1 = &SemiGenericStack[*prInt]{}
+
+	var tests1 = []struct {
+		name   string
+		val    *prInt
+		expVal string
+	}{
+		{"push to empty prInt pointer stack", new(prInt), "0"},
+		{"push to 1 element prInt pointer stack", ptr1, "1"},
+		{"push to 2 element prInt pointer stack", ptr2, "2"},
+		{"push to 3 element prInt pointer stack", ptr3, "3"},
+	}
+
+	for _, test := range tests1 {
+		t.Run(test.name, func(t *testing.T) {
+			err := s1.Push(test.val)
+			if err != nil {
+				t.Errorf("Push() failed with error: %v", err)
+			} else {
+				peekVal, err2 := s1.Peek()
+				if err2 != nil {
+					t.Errorf("Peek() failed with error: %v", err2)
+				}
+
+				got := peekVal.String()
+				want := test.expVal
+
+				if got != want {
+					t.Errorf("Push() returned incorrect results, want: %v, got: %v", want, got)
+				}
+			}
+		})
+	}
+
+	// Part 2: Stack of prStrings
+	var s2 *SemiGenericStack[prString]
+
+	var prS0 prString
+	var prS1, prS2, prS3 prString = "a", "b", "c"
+
+	err = s2.Push(prS1)
+	if err == nil {
+		t.Error("Calling Push() on a nil stack should return an error!")
+	} else {
+		fmt.Println(err)
+	}
+
+	s2 = &SemiGenericStack[prString]{}
+
+	var tests2 = []struct {
+		name   string
+		val    prString
+		expVal string
+	}{
+		{"push to empty prString stack", prS0, ""},
+		{"push to 1 element prString stack", prS1, "a"},
+		{"push to 2 element prString stack", prS2, "b"},
+		{"push to 3 element prString stack", prS3, "c"},
+	}
+
+	for _, test := range tests2 {
+		t.Run(test.name, func(t *testing.T) {
+			err := s2.Push(test.val)
+			if err != nil {
+				t.Errorf("Push() failed with error: %v", err)
+			} else {
+				peekVal, err2 := s2.Peek()
+				if err2 != nil {
+					t.Errorf("Peek() failed with error: %v", err2)
+				}
+
+				got := peekVal.String()
+				want := test.expVal
+
+				if got != want {
+					t.Errorf("Push() returned incorrect results, want: %v, got: %v", want, got)
+				}
+			}
+		})
 	}
 }
