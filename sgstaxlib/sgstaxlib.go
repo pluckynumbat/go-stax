@@ -47,3 +47,18 @@ func (stack *SemiGenericStack[T]) Peek() (T, error) {
 
 	return data, nil
 }
+
+// MEthod to adda new element to the top of the Semi Generic Stack
+func (stack *SemiGenericStack[T]) Push(val T) error {
+	if stack.IsNil() {
+		return stackNilError
+	}
+
+	if stack.isListNil() {
+		stack.sdlist = &sdlistlib.SemiGenericList[T]{}
+	}
+
+	stack.sdlist.AddAtBeginning(val)
+
+	return nil
+}
