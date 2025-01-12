@@ -10,11 +10,8 @@ import (
 type prInt int       // printable int
 type prString string // printable string
 
-func (p *prInt) String() string {
-	if p == nil {
-		return "nil"
-	}
-	return fmt.Sprintf("%v", *p)
+func (p prInt) String() string {
+	return fmt.Sprintf("%v", int(p))
 }
 
 func (p prString) String() string {
@@ -145,15 +142,16 @@ func TestPeek(t *testing.T) {
 			gotVal, gotErr := test.stack.Peek()
 			wantErr := test.expErr
 
-			gotString := gotVal.String()
-			wantString := test.expValString
-
 			if gotErr != wantErr {
 				t.Errorf("Unexpected error for Peek(), want: %v, got : %v", wantErr, gotErr)
-			}
-
-			if gotString != wantString {
-				t.Errorf("Incorrect result for Peek(), want: %v, got : %v", wantString, gotString)
+			} else if gotErr != nil {
+				fmt.Println(gotErr)
+			} else {
+				gotString := gotVal.String()
+				wantString := test.expValString
+				if gotString != wantString {
+					t.Errorf("Incorrect result for Peek(), want: %v, got : %v", wantString, gotString)
+				}
 			}
 		})
 	}
@@ -217,9 +215,8 @@ func TestPush(t *testing.T) {
 	var s1 *SemiGenericStack[*prInt]
 
 	var pr1, pr2, pr3 prInt = 1, 2, 3
-	ptr1, ptr2, ptr3 := &pr1, &pr2, &pr3
 
-	err := s1.Push(ptr1)
+	err := s1.Push(&pr1)
 	if err == nil {
 		t.Error("Calling Push() on a nil stack should return an error!")
 	} else {
@@ -234,9 +231,9 @@ func TestPush(t *testing.T) {
 		expVal string
 	}{
 		{"push to empty prInt pointer stack", new(prInt), "0"},
-		{"push to 1 element prInt pointer stack", ptr1, "1"},
-		{"push to 2 element prInt pointer stack", ptr2, "2"},
-		{"push to 3 element prInt pointer stack", ptr3, "3"},
+		{"push to 1 element prInt pointer stack", &pr1, "1"},
+		{"push to 2 element prInt pointer stack", &pr2, "2"},
+		{"push to 3 element prInt pointer stack", &pr3, "3"},
 	}
 
 	for _, test := range tests1 {
@@ -261,29 +258,29 @@ func TestPush(t *testing.T) {
 	}
 
 	// Part 2: Stack of prStrings
-	var s2 *SemiGenericStack[prString]
+	var s2 *SemiGenericStack[*prString]
 
 	var prS0 prString
 	var prS1, prS2, prS3 prString = "a", "b", "c"
 
-	err = s2.Push(prS1)
+	err = s2.Push(&prS1)
 	if err == nil {
 		t.Error("Calling Push() on a nil stack should return an error!")
 	} else {
 		fmt.Println(err)
 	}
 
-	s2 = &SemiGenericStack[prString]{}
+	s2 = &SemiGenericStack[*prString]{}
 
 	var tests2 = []struct {
 		name   string
-		val    prString
+		val    *prString
 		expVal string
 	}{
-		{"push to empty prString stack", prS0, ""},
-		{"push to 1 element prString stack", prS1, "a"},
-		{"push to 2 element prString stack", prS2, "b"},
-		{"push to 3 element prString stack", prS3, "c"},
+		{"push to empty prString stack", &prS0, ""},
+		{"push to 1 element prString stack", &prS1, "a"},
+		{"push to 2 element prString stack", &prS2, "b"},
+		{"push to 3 element prString stack", &prS3, "c"},
 	}
 
 	for _, test := range tests2 {
