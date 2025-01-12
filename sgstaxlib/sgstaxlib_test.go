@@ -7,13 +7,18 @@ import (
 	"github.com/pluckynumbat/linked-list-stuff-go/sdlistlib"
 )
 
-type prInt int
+type prInt int       // printable int
+type prString string // printable string
 
 func (p *prInt) String() string {
 	if p == nil {
 		return "nil"
 	}
 	return fmt.Sprintf("%v", *p)
+}
+
+func (p prString) String() string {
+	return fmt.Sprintf("%v", string(p))
 }
 
 func TestIsNil(t *testing.T) {
@@ -254,3 +259,50 @@ func TestPushprInt(t *testing.T) {
 	}
 }
 
+func TestPushprString(t *testing.T) {
+	var s *SemiGenericStack[prString]
+
+	var pr0 prString
+	var pr1, pr2, pr3 prString = "a", "b", "c"
+
+	err := s.Push(pr1)
+	if err == nil {
+		t.Error("Calling Push() on a nil stack should return an error!")
+	} else {
+		fmt.Println(err)
+	}
+
+	s = &SemiGenericStack[prString]{}
+
+	var tests = []struct {
+		name   string
+		val    prString
+		expVal string
+	}{
+		{"push to empty stack", pr0, ""},
+		{"push to 1 element stack", pr1, "a"},
+		{"push to 2 element stack", pr2, "b"},
+		{"push to 3 element stack", pr3, "c"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err := s.Push(test.val)
+			if err != nil {
+				t.Errorf("Push() failed with error: %v", err)
+			} else {
+				peekVal, err2 := s.Peek()
+				if err2 != nil {
+					t.Errorf("Peek() failed with error: %v", err2)
+				}
+
+				got := peekVal.String()
+				want := test.expVal
+
+				if got != want {
+					t.Errorf("Push() returned incorrect results, want: %v, got: %v", want, got)
+				}
+			}
+		})
+	}
+}
