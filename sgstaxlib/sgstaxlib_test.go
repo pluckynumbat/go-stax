@@ -432,3 +432,107 @@ func TestPopNilEmptyStacks(t *testing.T) {
 	})
 }
 
+func TestPopTillEmpty(t *testing.T) {
+
+	//Stack of pointers to prInt
+	t.Run("stack of *prInt", func(t *testing.T) {
+		l := &sdlistlib.SemiGenericList[*prInt]{}
+
+		var pr1, pr2, pr3 prInt = 1, 2, 3
+		ptrs := []*prInt{&pr1, &pr2, &pr3}
+
+		for _, v := range ptrs {
+			err := l.AddAtBeginning(v)
+			if err != nil {
+				t.Fatalf("list's AddAtBeginning() failed with error: %v", err)
+			}
+		}
+
+		s := &SemiGenericStack[*prInt]{l}
+
+		var tests = []struct {
+			name       string
+			wantVal    *prInt
+			newTop     *prInt
+			expPeekErr error
+		}{
+			{"3 element stack", &pr3, &pr2, nil},
+			{"2 element stack", &pr2, &pr1, nil},
+			{"1 element stack", &pr1, nil, stackEmptyError},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.wantVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.wantVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.newTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.newTop, topVal)
+						}
+					}
+				}
+			})
+		}
+	})
+
+	//Stack of prString
+	t.Run("stack of prString", func(t *testing.T) {
+		l := &sdlistlib.SemiGenericList[prString]{}
+
+		prStrs := []prString{"a", "b", "c"}
+
+		for _, v := range prStrs {
+			err := l.AddAtBeginning(v)
+			if err != nil {
+				t.Fatalf("list's AddAtBeginning() failed with error: %v", err)
+			}
+		}
+
+		s := &SemiGenericStack[prString]{l}
+
+		var tests = []struct {
+			name       string
+			wantVal    prString
+			newTop     prString
+			expPeekErr error
+		}{
+			{"3 element stack", "c", "b", nil},
+			{"2 element stack", "b", "a", nil},
+			{"1 element stack", "a", "", stackEmptyError},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.wantVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.wantVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.newTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.newTop, topVal)
+						}
+					}
+				}
+			})
+		}
+	})
+}
+
