@@ -536,3 +536,178 @@ func TestPopTillEmpty(t *testing.T) {
 	})
 }
 
+func TestStackOperations(t *testing.T) {
+
+	// Stack of prInts
+	t.Run("stack of prInts", func(t *testing.T) {
+		s := &SemiGenericStack[prInt]{}
+
+		var pushTests = []struct {
+			name    string
+			pushVal prInt
+			expTop  prInt
+		}{
+			{"push 1", 1, 1},
+			{"push 2", 2, 2},
+			{"push 3", 3, 3},
+		}
+
+		for _, test := range pushTests {
+			t.Run(test.name, func(t *testing.T) {
+				err := s.Push(test.pushVal)
+				if err != nil {
+					t.Errorf("Push() failed with error: %v", err)
+				} else {
+					valTop, peekErr := s.Peek()
+					if peekErr != nil {
+						t.Errorf("Peek() failed with error: %v", peekErr)
+					} else {
+						if valTop != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, valTop)
+						}
+					}
+				}
+			})
+		}
+
+		var popTests = []struct {
+			name       string
+			popVal     prInt
+			expTop     prInt
+			expPeekErr error
+		}{
+			{"pop 3", 3, 2, nil},
+			{"pop 2", 2, 1, nil},
+			{"pop 1", 1, 0, stackEmptyError},
+		}
+
+		for _, test := range popTests {
+			t.Run(test.name, func(t *testing.T) {
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.popVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.popVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, topVal)
+						}
+					}
+				}
+			})
+		}
+
+		var stateTests = []struct {
+			name   string
+			fnName string
+			fn     func() bool
+			want   bool
+		}{
+			{"is stack nil", "IsNil()", s.IsNil, false},
+			{"is list nil", "isListNil()", s.isListNil, false},
+			{"is stack empty", "IsEmpty()", s.IsEmpty, true},
+		}
+
+		for _, test := range stateTests {
+			t.Run(test.name, func(t *testing.T) {
+				got := test.fn()
+				if got != test.want {
+					t.Errorf("Incorrect result for %v, want: %v, got : %v", test.fnName, test.want, got)
+				}
+			})
+		}
+	})
+
+	// Stack of pointers tp prStrings
+	t.Run("stack of prInts", func(t *testing.T) {
+		s := &SemiGenericStack[*prString]{}
+		var a, b, c prString = "a", "b", "c"
+
+		var pushTests = []struct {
+			name    string
+			pushVal *prString
+			expTop  *prString
+		}{
+			{"push pointer to a", &a, &a},
+			{"push pointer to b", &b, &b},
+			{"push pointer to c", &c, &c},
+		}
+
+		for _, test := range pushTests {
+			t.Run(test.name, func(t *testing.T) {
+				err := s.Push(test.pushVal)
+				if err != nil {
+					t.Errorf("Push() failed with error: %v", err)
+				} else {
+					valTop, peekErr := s.Peek()
+					if peekErr != nil {
+						t.Errorf("Peek() failed with error: %v", peekErr)
+					} else {
+						if valTop != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, valTop)
+						}
+					}
+				}
+			})
+		}
+
+		var popTests = []struct {
+			name       string
+			popVal     *prString
+			expTop     *prString
+			expPeekErr error
+		}{
+			{"pop pointer to c", &c, &b, nil},
+			{"pop pointer to b", &b, &a, nil},
+			{"pop pointer to ca", &a, nil, stackEmptyError},
+		}
+
+		for _, test := range popTests {
+			t.Run(test.name, func(t *testing.T) {
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.popVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.popVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, topVal)
+						}
+					}
+				}
+			})
+		}
+
+		var stateTests = []struct {
+			name   string
+			fnName string
+			fn     func() bool
+			want   bool
+		}{
+			{"is stack nil", "IsNil()", s.IsNil, false},
+			{"is list nil", "isListNil()", s.isListNil, false},
+			{"is stack empty", "IsEmpty()", s.IsEmpty, true},
+		}
+
+		for _, test := range stateTests {
+			t.Run(test.name, func(t *testing.T) {
+				got := test.fn()
+				if got != test.want {
+					t.Errorf("Incorrect result for %v, want: %v, got : %v", test.fnName, test.want, got)
+				}
+			})
+		}
+	})
+}
