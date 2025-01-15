@@ -345,3 +345,369 @@ func TestPopEmptyStack(t *testing.T) {
 	}
 }
 
+func TestPopNilEmptyStacks(t *testing.T) {
+
+	// Stack of prInt
+	t.Run("stacks of prInt", func(t *testing.T) {
+		var s1 *SemiGenericStack[prInt]
+		s2 := &SemiGenericStack[prInt]{}
+
+		l := &sdlistlib.SemiGenericList[prInt]{}
+		s3 := &SemiGenericStack[prInt]{l}
+
+		var pr prInt = 1
+		l2 := &sdlistlib.SemiGenericList[prInt]{}
+		l2.AddAtBeginning(pr)
+		s4 := &SemiGenericStack[prInt]{l2}
+
+		var tests = []struct {
+			name   string
+			stack  *SemiGenericStack[prInt]
+			expVal prInt
+			expErr error
+		}{
+			{"nil stack", s1, 0, stackNilError},
+			{"non-nil stack, nil list", s2, 0, stackEmptyError},
+			{"empty stack", s3, 0, stackEmptyError},
+			{"non-empty stack", s4, 1, nil},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, gotErr := test.stack.Pop()
+				if gotErr != test.expErr {
+					t.Errorf("Unexpected error for Pop(), want: %v, got : %v", test.expErr, gotErr)
+				} else if gotErr != nil {
+					fmt.Println(gotErr)
+				} else {
+					if val != test.expVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.expVal, val)
+					}
+				}
+			})
+		}
+	})
+
+	// Stack of pointers to prString
+	t.Run("stacks of *prString", func(t *testing.T) {
+		var s1 *SemiGenericStack[*prString]
+		s2 := &SemiGenericStack[*prString]{}
+
+		l := &sdlistlib.SemiGenericList[*prString]{}
+		s3 := &SemiGenericStack[*prString]{l}
+
+		var pr prString = "a"
+		l2 := &sdlistlib.SemiGenericList[*prString]{}
+		l2.AddAtBeginning(&pr)
+		s4 := &SemiGenericStack[*prString]{l2}
+
+		var tests = []struct {
+			name   string
+			stack  *SemiGenericStack[*prString]
+			expVal *prString
+			expErr error
+		}{
+			{"nil stack", s1, nil, stackNilError},
+			{"non-nil stack, nil list", s2, nil, stackEmptyError},
+			{"empty stack", s3, nil, stackEmptyError},
+			{"non-empty stack", s4, &pr, nil},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, gotErr := test.stack.Pop()
+				if gotErr != test.expErr {
+					t.Errorf("Unexpected error for Pop(), want: %v, got : %v", test.expErr, gotErr)
+				} else if gotErr != nil {
+					fmt.Println(gotErr)
+				} else {
+					if val != test.expVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.expVal, val)
+					}
+				}
+			})
+		}
+	})
+}
+
+func TestPopTillEmpty(t *testing.T) {
+
+	//Stack of pointers to prInt
+	t.Run("stack of *prInt", func(t *testing.T) {
+		l := &sdlistlib.SemiGenericList[*prInt]{}
+
+		var pr1, pr2, pr3 prInt = 1, 2, 3
+		ptrs := []*prInt{&pr1, &pr2, &pr3}
+
+		for _, v := range ptrs {
+			err := l.AddAtBeginning(v)
+			if err != nil {
+				t.Fatalf("list's AddAtBeginning() failed with error: %v", err)
+			}
+		}
+
+		s := &SemiGenericStack[*prInt]{l}
+
+		var tests = []struct {
+			name       string
+			wantVal    *prInt
+			newTop     *prInt
+			expPeekErr error
+		}{
+			{"3 element stack", &pr3, &pr2, nil},
+			{"2 element stack", &pr2, &pr1, nil},
+			{"1 element stack", &pr1, nil, stackEmptyError},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.wantVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.wantVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.newTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.newTop, topVal)
+						}
+					}
+				}
+			})
+		}
+	})
+
+	//Stack of prString
+	t.Run("stack of prString", func(t *testing.T) {
+		l := &sdlistlib.SemiGenericList[prString]{}
+
+		prStrs := []prString{"a", "b", "c"}
+
+		for _, v := range prStrs {
+			err := l.AddAtBeginning(v)
+			if err != nil {
+				t.Fatalf("list's AddAtBeginning() failed with error: %v", err)
+			}
+		}
+
+		s := &SemiGenericStack[prString]{l}
+
+		var tests = []struct {
+			name       string
+			wantVal    prString
+			newTop     prString
+			expPeekErr error
+		}{
+			{"3 element stack", "c", "b", nil},
+			{"2 element stack", "b", "a", nil},
+			{"1 element stack", "a", "", stackEmptyError},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.wantVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.wantVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.newTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.newTop, topVal)
+						}
+					}
+				}
+			})
+		}
+	})
+}
+
+func TestStackOperations(t *testing.T) {
+
+	// Stack of prInts
+	t.Run("stack of prInts", func(t *testing.T) {
+		s := &SemiGenericStack[prInt]{}
+
+		var pushTests = []struct {
+			name    string
+			pushVal prInt
+			expTop  prInt
+		}{
+			{"push 1", 1, 1},
+			{"push 2", 2, 2},
+			{"push 3", 3, 3},
+		}
+
+		for _, test := range pushTests {
+			t.Run(test.name, func(t *testing.T) {
+				err := s.Push(test.pushVal)
+				if err != nil {
+					t.Errorf("Push() failed with error: %v", err)
+				} else {
+					valTop, peekErr := s.Peek()
+					if peekErr != nil {
+						t.Errorf("Peek() failed with error: %v", peekErr)
+					} else {
+						if valTop != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, valTop)
+						}
+					}
+				}
+			})
+		}
+
+		var popTests = []struct {
+			name       string
+			popVal     prInt
+			expTop     prInt
+			expPeekErr error
+		}{
+			{"pop 3", 3, 2, nil},
+			{"pop 2", 2, 1, nil},
+			{"pop 1", 1, 0, stackEmptyError},
+		}
+
+		for _, test := range popTests {
+			t.Run(test.name, func(t *testing.T) {
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.popVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.popVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, topVal)
+						}
+					}
+				}
+			})
+		}
+
+		var stateTests = []struct {
+			name   string
+			fnName string
+			fn     func() bool
+			want   bool
+		}{
+			{"is stack nil", "IsNil()", s.IsNil, false},
+			{"is list nil", "isListNil()", s.isListNil, false},
+			{"is stack empty", "IsEmpty()", s.IsEmpty, true},
+		}
+
+		for _, test := range stateTests {
+			t.Run(test.name, func(t *testing.T) {
+				got := test.fn()
+				if got != test.want {
+					t.Errorf("Incorrect result for %v, want: %v, got : %v", test.fnName, test.want, got)
+				}
+			})
+		}
+	})
+
+	// Stack of pointers tp prStrings
+	t.Run("stack of prInts", func(t *testing.T) {
+		s := &SemiGenericStack[*prString]{}
+		var a, b, c prString = "a", "b", "c"
+
+		var pushTests = []struct {
+			name    string
+			pushVal *prString
+			expTop  *prString
+		}{
+			{"push pointer to a", &a, &a},
+			{"push pointer to b", &b, &b},
+			{"push pointer to c", &c, &c},
+		}
+
+		for _, test := range pushTests {
+			t.Run(test.name, func(t *testing.T) {
+				err := s.Push(test.pushVal)
+				if err != nil {
+					t.Errorf("Push() failed with error: %v", err)
+				} else {
+					valTop, peekErr := s.Peek()
+					if peekErr != nil {
+						t.Errorf("Peek() failed with error: %v", peekErr)
+					} else {
+						if valTop != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, valTop)
+						}
+					}
+				}
+			})
+		}
+
+		var popTests = []struct {
+			name       string
+			popVal     *prString
+			expTop     *prString
+			expPeekErr error
+		}{
+			{"pop pointer to c", &c, &b, nil},
+			{"pop pointer to b", &b, &a, nil},
+			{"pop pointer to ca", &a, nil, stackEmptyError},
+		}
+
+		for _, test := range popTests {
+			t.Run(test.name, func(t *testing.T) {
+				val, err := s.Pop()
+				if err != nil {
+					t.Errorf("Pop() failed with error: %v", err)
+				} else {
+					if val != test.popVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.popVal, val)
+					} else {
+						topVal, peekErr := s.Peek()
+						if peekErr != test.expPeekErr {
+							t.Errorf("Unexpected error for Peek(), want: %v, got : %v", test.expPeekErr, peekErr)
+						} else if peekErr != nil {
+							fmt.Println(peekErr)
+						} else if topVal != test.expTop {
+							t.Errorf("Incorrect result for Peek(), want: %v, got : %v", test.expTop, topVal)
+						}
+					}
+				}
+			})
+		}
+
+		var stateTests = []struct {
+			name   string
+			fnName string
+			fn     func() bool
+			want   bool
+		}{
+			{"is stack nil", "IsNil()", s.IsNil, false},
+			{"is list nil", "isListNil()", s.isListNil, false},
+			{"is stack empty", "IsEmpty()", s.IsEmpty, true},
+		}
+
+		for _, test := range stateTests {
+			t.Run(test.name, func(t *testing.T) {
+				got := test.fn()
+				if got != test.want {
+					t.Errorf("Incorrect result for %v, want: %v, got : %v", test.fnName, test.want, got)
+				}
+			})
+		}
+	})
+}
