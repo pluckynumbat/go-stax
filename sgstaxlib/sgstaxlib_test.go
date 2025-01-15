@@ -345,3 +345,90 @@ func TestPopEmptyStack(t *testing.T) {
 	}
 }
 
+func TestPopNilEmptyStacks(t *testing.T) {
+
+	// Stack of prInt
+	t.Run("stacks of prInt", func(t *testing.T) {
+		var s1 *SemiGenericStack[prInt]
+		s2 := &SemiGenericStack[prInt]{}
+
+		l := &sdlistlib.SemiGenericList[prInt]{}
+		s3 := &SemiGenericStack[prInt]{l}
+
+		var pr prInt = 1
+		l2 := &sdlistlib.SemiGenericList[prInt]{}
+		l2.AddAtBeginning(pr)
+		s4 := &SemiGenericStack[prInt]{l2}
+
+		var tests = []struct {
+			name   string
+			stack  *SemiGenericStack[prInt]
+			expVal prInt
+			expErr error
+		}{
+			{"nil stack", s1, 0, stackNilError},
+			{"non-nil stack, nil list", s2, 0, stackEmptyError},
+			{"empty stack", s3, 0, stackEmptyError},
+			{"non-empty stack", s4, 1, nil},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, gotErr := test.stack.Pop()
+				if gotErr != test.expErr {
+					t.Errorf("Unexpected error for Pop(), want: %v, got : %v", test.expErr, gotErr)
+				} else if gotErr != nil {
+					fmt.Println(gotErr)
+				} else {
+					if val != test.expVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.expVal, val)
+					}
+				}
+			})
+		}
+	})
+
+	// Stack of pointers to prString
+	t.Run("stacks of *prString", func(t *testing.T) {
+		var s1 *SemiGenericStack[*prString]
+		s2 := &SemiGenericStack[*prString]{}
+
+		l := &sdlistlib.SemiGenericList[*prString]{}
+		s3 := &SemiGenericStack[*prString]{l}
+
+		var pr prString = "a"
+		l2 := &sdlistlib.SemiGenericList[*prString]{}
+		l2.AddAtBeginning(&pr)
+		s4 := &SemiGenericStack[*prString]{l2}
+
+		var tests = []struct {
+			name   string
+			stack  *SemiGenericStack[*prString]
+			expVal *prString
+			expErr error
+		}{
+			{"nil stack", s1, nil, stackNilError},
+			{"non-nil stack, nil list", s2, nil, stackEmptyError},
+			{"empty stack", s3, nil, stackEmptyError},
+			{"non-empty stack", s4, &pr, nil},
+		}
+
+		for _, test := range tests {
+			t.Run(test.name, func(t *testing.T) {
+
+				val, gotErr := test.stack.Pop()
+				if gotErr != test.expErr {
+					t.Errorf("Unexpected error for Pop(), want: %v, got : %v", test.expErr, gotErr)
+				} else if gotErr != nil {
+					fmt.Println(gotErr)
+				} else {
+					if val != test.expVal {
+						t.Errorf("Incorrect result for Pop(), want: %v, got : %v", test.expVal, val)
+					}
+				}
+			})
+		}
+	})
+}
+
