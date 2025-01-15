@@ -62,3 +62,26 @@ func (stack *SemiGenericStack[T]) Push(val T) error {
 
 	return nil
 }
+
+// Method to remove the top most element from a Semi Generic Stack (if present) and return it
+func (stack *SemiGenericStack[T]) Pop() (T, error) {
+	if stack.IsNil() {
+		return *new(T), stackNilError
+	}
+
+	if stack.IsEmpty() {
+		return *new(T), stackEmptyError
+	}
+
+	node, err := stack.sdlist.RemoveFirst()
+	if err != nil {
+		return *new(T), fmt.Errorf("Pop() failed with error: %v", err)
+	}
+
+	val, err := node.GetData()
+	if err != nil {
+		return *new(T), fmt.Errorf("Pop() failed with error: %v", err)
+	}
+
+	return val, nil
+}
