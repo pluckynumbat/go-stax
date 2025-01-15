@@ -304,3 +304,44 @@ func TestPush(t *testing.T) {
 		})
 	}
 }
+
+func TestPopNilStack(t *testing.T) {
+	var s1 *SemiGenericStack[prInt]
+
+	_, err := s1.Pop()
+	if err == nil {
+		t.Errorf("Pop() on a nil stack should return an error")
+	} else {
+		fmt.Println(err)
+	}
+
+	var s2 *SemiGenericStack[*prString]
+
+	_, err = s2.Pop()
+	if err == nil {
+		t.Errorf("Pop() on a nil stack should return an error")
+	} else {
+		fmt.Println(err)
+	}
+}
+
+func TestPopEmptyStack(t *testing.T) {
+	s1 := &SemiGenericStack[*prInt]{}
+
+	_, err := s1.Pop()
+	if err == nil {
+		t.Errorf("Pop() on an empty stack should return an error")
+	} else {
+		fmt.Println(err)
+	}
+
+	s2 := &SemiGenericStack[prString]{}
+
+	_, err = s2.Pop()
+	if err == nil {
+		t.Errorf("Pop() on an empty stack should return an error")
+	} else {
+		fmt.Println(err)
+	}
+}
+
